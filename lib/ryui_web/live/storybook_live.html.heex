@@ -1,0 +1,62 @@
+<Layouts.app flash={@flash}>
+  <div class="w-full h-full">
+    <.sidebar>
+      <:sidebar_content>
+        <ul class="p-4 menu rounded-box w-full">
+          <li><a href="#tooltip">Tooltip</a></li>
+          <li><a href="#accordian">Accordian</a></li>
+        </ul>
+      </:sidebar_content>
+
+      <.section id="tooltip" title="Tooltip">
+        <:example
+          title="All directions"
+          source={
+            ~s"""
+            <.tooltip tip="Hello World">Top</.tooltip>
+            <.tooltip position="right" tip="Hello World">Right</.tooltip>
+            <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
+            <.tooltip position="left" tip="Hello World">Left</.tooltip>
+            """
+          }
+        >
+          <.tooltip tip="Hello World">Top</.tooltip>
+          <.tooltip position="right" tip="Hello World">Right</.tooltip>
+          <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
+          <.tooltip position="left" tip="Hello World">Left</.tooltip>
+        </:example>
+
+        <:example
+          title="With html content"
+          source={
+            ~s"""
+            <.tooltip>
+              <:tooltip_content>
+                <div class="flex items-center">
+                  <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
+                </div>
+              </:tooltip_content>
+              Hover
+            </.tooltip>
+            """
+          }
+        >
+          <.tooltip>
+            <:tooltip_content>
+              <div class="flex items-center">
+                <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
+              </div>
+            </:tooltip_content>
+            Hover
+          </.tooltip>
+        </:example>
+      </.section>
+
+      <div class="w-50 h-200 bg-blue-400"></div>
+
+      <.section id="accordian" title="Accordian">
+        <:example title="Foo">5</:example>
+      </.section>
+    </.sidebar>
+  </div>
+</Layouts.app>

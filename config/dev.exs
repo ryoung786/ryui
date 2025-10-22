@@ -49,7 +49,8 @@ config :ryui, RyuiWeb.Endpoint,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/ryui_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"lib/ryui_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$",
+      ~r"lib/ryui/?.*\.(ex|heex)$"
     ]
   ]
 

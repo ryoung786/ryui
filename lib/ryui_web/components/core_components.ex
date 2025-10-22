@@ -469,4 +469,33 @@ defmodule RyuiWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+  def section(assigns) do
+    ~H"""
+    <h1 id={@id} class="text-2xl font-semibold underline mb-4">{@title}</h1>
+    <div class="flex flex-col gap-4">
+      <div :for={{example, i} <- Enum.with_index(@example)}>
+        <h2 class="text-lg font-semibold mb-2">{example[:title]}</h2>
+        <p :if={example[:description]} class="text-sm italic">{example[:description]}</p>
+        <div class="tabs tabs-lift">
+          <label class="tab">
+            <input type="radio" name={"#{@id}_#{i}"} checked />
+            <.icon name="hero-play" /> Preview
+          </label>
+          <div class="tab-content bg-base-100 border-base-300 p-6">
+            {render_slot(example)}
+          </div>
+
+          <label class="tab">
+            <input type="radio" name={"#{@id}_#{i}"} />
+            <.icon name="hero-code-bracket" /> Source
+          </label>
+          <div class="tab-content bg-base-100 border-base-300 p-1 text-sm">
+            <pre class="p-4 rounded text-lime-600 overflow-x-auto" data-theme="dark">{example[:source]}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
 end

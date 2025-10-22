@@ -1,0 +1,25 @@
+<script :type={Phoenix.LiveView.ColocatedHook} name=".Ryui.Sidebar">
+  export default {
+    mounted() {
+    }
+  }
+</script>
+<div
+  id={@id}
+  class={[
+    "grid h-full w-full",
+    "transition-[grid-template-columns] ease-in-out group duration-300",
+    "data-[sidebar-width=expanded]:grid-cols-[17rem_1fr]",
+    "data-[sidebar-width=collapsed]:grid-cols-[0_1fr]"
+  ]}
+  phx-hook=".Ryui.Sidebar"
+  data-sidebar-width="expanded"
+>
+  <aside class="h-full bg-base-200/30 relative border-r border-base-content/30">
+    {render_slot(@sidebar_content)}
+  </aside>
+
+  <main class="p-4 overflow-auto">
+    {render_slot(@inner_block)}
+  </main>
+</div>
