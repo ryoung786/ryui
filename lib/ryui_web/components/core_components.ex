@@ -491,7 +491,7 @@ defmodule RyuiWeb.CoreComponents do
             <.icon name="hero-code-bracket" /> Source
           </label>
           <div class="tab-content bg-base-100 border-base-300 p-1 text-sm">
-            <pre class="p-4 rounded text-lime-600 overflow-x-auto" data-theme="dark">{example[:source]}</pre>
+            <pre class="p-4 rounded text-lime-600 bg-black overflow-x-auto">{example[:source]}</pre>
           </div>
         </div>
       <% end %>

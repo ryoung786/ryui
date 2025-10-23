@@ -4,7 +4,8 @@
       <:sidebar_content>
         <ul class="p-4 menu rounded-box w-full">
           <li><a href="#tooltip">Tooltip</a></li>
-          <li><a href="#accordian">Accordian</a></li>
+          <li><a href="#details">Details</a></li>
+          <li><a href="#modal">Modal</a></li>
         </ul>
       </:sidebar_content>
 
@@ -68,6 +69,21 @@
               </:summary>
               <p class="text-sm">All the details here</p>
             </.details>
+          </:example>
+        </.section>
+
+        <.section id="modal" title="Modal">
+          <:example
+            title="All directions"
+            source={
+              ~s"""
+              <.button onclick="my_modal.showModal()">open modal</.button>
+              <.modal id="my_modal">Here is some content</.modal>
+              """
+            }
+          >
+            <.button onclick="my_modal.showModal()">open modal</.button>
+            <.modal id="my_modal">Here is some content</.modal>
           </:example>
         </.section>
       </div>
