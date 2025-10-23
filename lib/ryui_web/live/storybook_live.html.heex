@@ -8,28 +8,40 @@
         </ul>
       </:sidebar_content>
 
-      <.section id="tooltip" title="Tooltip">
-        <:example
-          title="All directions"
-          source={
-            ~s"""
+      <div class="flex flex-col gap-16">
+        <.section id="tooltip" title="Tooltip">
+          <:example
+            title="All directions"
+            source={
+              ~s"""
+              <.tooltip tip="Hello World">Top</.tooltip>
+              <.tooltip position="right" tip="Hello World">Right</.tooltip>
+              <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
+              <.tooltip position="left" tip="Hello World">Left</.tooltip>
+              """
+            }
+          >
             <.tooltip tip="Hello World">Top</.tooltip>
             <.tooltip position="right" tip="Hello World">Right</.tooltip>
             <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
             <.tooltip position="left" tip="Hello World">Left</.tooltip>
-            """
-          }
-        >
-          <.tooltip tip="Hello World">Top</.tooltip>
-          <.tooltip position="right" tip="Hello World">Right</.tooltip>
-          <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
-          <.tooltip position="left" tip="Hello World">Left</.tooltip>
-        </:example>
+          </:example>
 
-        <:example
-          title="With html content"
-          source={
-            ~s"""
+          <:example
+            title="With html content"
+            source={
+              ~s"""
+              <.tooltip>
+                <:tooltip_content>
+                  <div class="flex items-center">
+                    <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
+                  </div>
+                </:tooltip_content>
+                Hover
+              </.tooltip>
+              """
+            }
+          >
             <.tooltip>
               <:tooltip_content>
                 <div class="flex items-center">
@@ -38,25 +50,27 @@
               </:tooltip_content>
               Hover
             </.tooltip>
+          </:example>
+        </.section>
+
+        <.section id="details" title="Details">
+          <:example source={
+            ~s"""
+            <.details>
+              <:summary><h1 class="font-semibold">Click to open</h1></:summary>
+              <p class="text-sm">All the details here</p>
+            </.details>
             """
-          }
-        >
-          <.tooltip>
-            <:tooltip_content>
-              <div class="flex items-center">
-                <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
-              </div>
-            </:tooltip_content>
-            Hover
-          </.tooltip>
-        </:example>
-      </.section>
-
-      <div class="w-50 h-200 bg-blue-400"></div>
-
-      <.section id="accordian" title="Accordian">
-        <:example title="Foo">5</:example>
-      </.section>
+          }>
+            <.details>
+              <:summary>
+                <h1 class="font-semibold">Click to open</h1>
+              </:summary>
+              <p class="text-sm">All the details here</p>
+            </.details>
+          </:example>
+        </.section>
+      </div>
     </.sidebar>
   </div>
 </Layouts.app>

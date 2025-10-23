@@ -7,6 +7,7 @@ defmodule Ryui do
   if it comes from the database, an external API or others.
   """
 
+  defdelegate details(assigns), to: Ryui.Details
   defdelegate tooltip(assigns), to: Ryui.Tooltip
   defdelegate sidebar(assigns), to: Ryui.Sidebar
 end
