@@ -6,10 +6,22 @@
           <li><a href="#tooltip">Tooltip</a></li>
           <li><a href="#details">Details</a></li>
           <li><a href="#modal">Modal</a></li>
+          <li><a href="#combobox">Combobox</a></li>
         </ul>
       </:sidebar_content>
 
       <div class="flex flex-col gap-16">
+        <.section id="combobox" title="Combobox">
+          <:example source={
+            ~s"""
+            <.button onclick="my_modal.showModal()">open modal</.button>
+            <.modal id="my_modal">Here is some content</.modal>
+            """
+          }>
+            <Ryui.Combobox.combobox search_fn={&search_fn/1} />
+          </:example>
+        </.section>
+
         <.section id="tooltip" title="Tooltip">
           <:example
             title="All directions"

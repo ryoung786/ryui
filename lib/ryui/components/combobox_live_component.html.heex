@@ -1,0 +1,59 @@
+<script :type={Phoenix.LiveView.ColocatedHook} name=".Ryui.Combobox">
+  export default {
+    mounted() {
+      const selectElement = this.el.querySelector('select');
+      const input = this.el.querySelector('input[type="search"]');
+      const dropdownElement = this.el.querySelector('ul.menu');
+      input.addEventListener('focus', () => {
+        dropdownElement.showPopover();
+      });
+
+      window.addEventListener('ryui:combobox:click-away', () => {
+        dropdownElement.hidePopover();
+      });
+    }
+  }
+</script>
+<div id={@id} phx-hook=".Ryui.Combobox">
+  <select name="myselect[]" multiple hidden>
+    <option :for={value <- @selections} value={value} selected>{value}</option>
+  </select>
+
+  <form
+    class="inline-block w-[clamp(3rem,20rem,100%)]"
+    phx-click-away={JS.dispatch("ryui:combobox:click-away")}
+  >
+    <label class="input" style={"anchor-name:--#{@id}-anchor"}>
+      <div :if={length(@selections) > 0} class="selected-chips flex gap-1 text-xs">
+        <.chip :for={value <- @selections} value={value} myself={@myself}>{value}</.chip>
+      </div>
+      <input
+        type="search"
+        name="search-text"
+        class="grow"
+        autocomplete="off"
+        placeholder="Search"
+        phx-debounce={120}
+        phx-target={@myself}
+        phx-change="search"
+      />
+      <.icon name="hero-magnifying-glass" class="h-4" />
+    </label>
+  </form>
+  <ul
+    id={@id <> "-popover"}
+    class="absolute menu w-52 rounded-box bg-base-100 shadow-sm border border-base-content/10 hidden open:block z-99"
+    popover="manual"
+    style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
+  >
+    <li
+      :for={{text, value} <- @options}
+      phx-click={
+        JS.dispatch("ryui:combobox:add-selection", detail: value)
+        |> JS.push("selected", value: %{value: value}, target: @myself)
+      }
+    >
+      <a>{text}</a>
+    </li>
+  </ul>
+</div>
