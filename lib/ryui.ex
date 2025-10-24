@@ -11,4 +11,5 @@ defmodule Ryui do
   defdelegate tooltip(assigns), to: Ryui.Tooltip
   defdelegate sidebar(assigns), to: Ryui.Sidebar
   defdelegate modal(assigns), to: Ryui.Modal
+  defdelegate combobox(assigns), to: Ryui.Combobox
 end

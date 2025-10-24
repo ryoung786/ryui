@@ -14,11 +14,17 @@
         <.section id="combobox" title="Combobox">
           <:example source={
             ~s"""
-            <.button onclick="my_modal.showModal()">open modal</.button>
-            <.modal id="my_modal">Here is some content</.modal>
             """
           }>
-            <Ryui.Combobox.combobox search_fn={&search_fn/1} />
+            <.combobox>
+              <:option
+                :for={person <- @search_results}
+                value={person.id}
+                chip_text={person.name}
+              >
+                <.icon name="hero-user" class="size-4" />{person.name}
+              </:option>
+            </.combobox>
           </:example>
         </.section>
 

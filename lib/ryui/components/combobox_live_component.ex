@@ -7,8 +7,11 @@ defmodule Ryui.ComboboxLiveComponent do
     socket =
       socket
       |> assign(assigns)
+      |> assign_new(:active_id, fn -> nil end)
+      |> assign_new(:highlighted_index, fn -> 0 end)
       |> assign_new(:selections, fn -> [] end)
       |> assign_new(:search_fn, fn -> &search/1 end)
+      |> assign_new(:display_fn, fn -> & &1 end)
 
     socket = socket |> assign_new(:options, fn -> socket.assigns.search_fn.("") end)
     {:ok, socket}
@@ -27,9 +30,7 @@ defmodule Ryui.ComboboxLiveComponent do
     {:noreply, assign(socket, options: socket.assigns.search_fn.(q))}
   end
 
-  defp search(_q) do
-    [{"Foo", "foo"}, {"Bar", "bar"}, {"Baz", "baz"}]
-  end
+  defp search(_q), do: ~w/foo bar baz/
 
   def chip(assigns) do
     ~H"""

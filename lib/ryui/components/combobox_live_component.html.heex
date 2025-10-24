@@ -4,13 +4,54 @@
       const selectElement = this.el.querySelector('select');
       const input = this.el.querySelector('input[type="search"]');
       const dropdownElement = this.el.querySelector('ul.menu');
-      input.addEventListener('focus', () => {
-        dropdownElement.showPopover();
+      this.index = 0;
+
+      window.addEventListener('ryui:combobox:toggle-listbox', (e) => {
+        if (this.el.contains(e.target)) {
+          if (e.detail == "show") {
+            dropdownElement.showPopover();
+          } else {
+            setTimeout(() => dropdownElement.hidePopover(), 150);
+          }
+        }
       });
 
-      window.addEventListener('ryui:combobox:click-away', () => {
-        dropdownElement.hidePopover();
+      // --- Keyboard navigation ---
+      window.addEventListener('keydown', (e) => {
+        if (!this.el.contains(e.target)) return;
+
+        const items = Array.from(dropdownElement.querySelectorAll('[role="option"]'));
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          this.index = (this.index + 1) % items.length;
+          this.updateHighlight(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          this.index = (this.index - 1 + items.length) % items.length;
+          this.updateHighlight(items);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          this.pushEventTo(this.el, "selected", {value: items[this.index].dataset.value});
+          this.index = 0;
+        }
       });
+    },
+    updateHighlight(items) {
+      items.forEach((el, i) => {
+        el.classList.toggle('bg-gray-200', i === this.index);
+        el.setAttribute('aria-selected', i === this.index);
+      });
+
+      const active = items[this.index];
+      const input = this.el.querySelector('input[type="search"]');
+      if (active) {
+        input.setAttribute('aria-activedescendant', active.id);
+        active.scrollIntoView({ block: "nearest" });
+      } else {
+        input.removeAttribute('aria-activedescendant');
+      }
     }
   }
 </script>
@@ -19,10 +60,7 @@
     <option :for={value <- @selections} value={value} selected>{value}</option>
   </select>
 
-  <form
-    class="inline-block w-[clamp(3rem,20rem,100%)]"
-    phx-click-away={JS.dispatch("ryui:combobox:click-away")}
-  >
+  <form class="inline-block w-[clamp(3rem,20rem,100%)]">
     <label class="input" style={"anchor-name:--#{@id}-anchor"}>
       <div :if={length(@selections) > 0} class="selected-chips flex gap-1 text-xs">
         <.chip :for={value <- @selections} value={value} myself={@myself}>{value}</.chip>
@@ -36,24 +74,39 @@
         phx-debounce={120}
         phx-target={@myself}
         phx-change="search"
+        phx-focus={JS.dispatch("ryui:combobox:toggle-listbox", detail: "show")}
+        phx-blur={JS.dispatch("ryui:combobox:toggle-listbox", detail: "hide")}
+        role="combobox"
+        aria-controls={@id <> "-listbox"}
+        aria-expanded="false"
+        aria-autocomplete="list"
+        aria-activedescendant=""
       />
       <.icon name="hero-magnifying-glass" class="h-4" />
     </label>
   </form>
   <ul
-    id={@id <> "-popover"}
+    id={@id <> "-listbox"}
+    role="listbox"
     class="absolute menu w-52 rounded-box bg-base-100 shadow-sm border border-base-content/10 hidden open:block z-99"
     popover="manual"
     style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
   >
     <li
-      :for={{text, value} <- @options}
+      :for={{{value, option}, i} <- Enum.with_index(@options)}
+      role="option"
+      aria-selected={i == @highlighted_index}
       phx-click={
         JS.dispatch("ryui:combobox:add-selection", detail: value)
         |> JS.push("selected", value: %{value: value}, target: @myself)
       }
+      data-value={value}
+      class={[
+        "p-2 cursor-pointer",
+        i == @highlighted_index && "bg-gray-200"
+      ]}
     >
-      <a>{text}</a>
+      <a>{@display_fn.(option)}</a>
     </li>
   </ul>
 </div>
