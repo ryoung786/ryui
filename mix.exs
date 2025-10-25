@@ -40,6 +40,8 @@ defmodule Ryui.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ecto, "~> 3.13.4"},
+      {:phoenix_ecto, "~> 4.0"},
       {:phoenix, "~> 1.8.1"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

@@ -3,10 +3,10 @@
     <.sidebar>
       <:sidebar_content>
         <ul class="p-4 menu rounded-box w-full">
+          <li><a href="#combobox">Combobox</a></li>
           <li><a href="#tooltip">Tooltip</a></li>
           <li><a href="#details">Details</a></li>
           <li><a href="#modal">Modal</a></li>
-          <li><a href="#combobox">Combobox</a></li>
         </ul>
       </:sidebar_content>
 
@@ -33,6 +33,32 @@
                 <.icon name="hero-flag" class="size-4" />{name}
               </:option>
             </.combobox>
+          </:example>
+
+          <:example
+            title="With Forms"
+            source={
+              ~s"""
+              <.form :let={f} for={@form} phx-change="validate">
+                <.combobox id="combobox3" options={@countries} field={f[:countries]} />
+              </.form>
+
+              # in liveview
+              def handle_event("validate", params, socket) do
+                form =
+                  (params["countries"] || %{})
+                  |> Countries.changeset()
+                  |> Map.put(:action, :validate)
+                  |> to_form(as: :countries)
+
+                {:noreply, assign(socket, combobox_form: form)}
+              end
+              """
+            }
+          >
+            <.form :let={f} for={@combobox_form} phx-change="validate">
+              <.combobox id="combobox3" options={@countries} field={f[:countries]} />
+            </.form>
           </:example>
         </.section>
 

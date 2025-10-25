@@ -3,22 +3,39 @@ defmodule Ryui.Combobox do
 
   @doc """
   """
-  attr :id, :string, required: true
+  attr :id, :string, default: nil
+  attr :name, :string
   attr :listbox_class, :string, default: nil
   attr :options, :list, default: []
+  attr :field, :any, default: nil
+  attr :errors, :list, default: []
+  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
   slot :option do
     attr :value, :string, required: true
     attr :chip_text, :string, required: true
   end
 
+  def combobox(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
+    |> assign_new(:name, fn -> field.name <> "[]" end)
+    |> combobox()
+  end
+
   def combobox(assigns) do
+    assigns = assign_new(assigns, :name, fn -> "combobox-select" end)
+
     ~H"""
     <div id={@id} phx-hook="ComboboxHook">
-      <select id={@id <> "-select"} name="myselect[]" multiple hidden phx-update="ignore"></select>
+      <select id={@id <> "-select"} name={@name} multiple hidden phx-update="ignore"></select>
 
       <form class="inline-block w-full">
-        <label class="input w-full" style={"anchor-name:--#{@id}-anchor"}>
+        <label
+          class={["input w-full", @errors != [] && "input-error"]}
+          style={"anchor-name:--#{@id}-anchor"}
+        >
           <div class="flex w-full items-center">
             <div
               id={@id <> "-selected-chips"}
@@ -44,6 +61,9 @@ defmodule Ryui.Combobox do
           </div>
           <.icon name="hero-magnifying-glass" class="w-4 h-4" />
         </label>
+        <p :for={msg <- @errors} class="mt-1.5 flex gap-2 items-center text-sm text-error">
+          <.icon name="hero-exclamation-circle" class="size-5" />{msg}
+        </p>
       </form>
       <ul
         id={@id <> "-listbox"}

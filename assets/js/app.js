@@ -142,6 +142,7 @@ ComboboxHook = {
     chip.remove();
     const option = this.selectEl.querySelector(`option[data-value="${value}"]`);
     option.remove();
+    this.selectEl.dispatchEvent(new Event("change", { bubbles: true }));
   },
 };
 

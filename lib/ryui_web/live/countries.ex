@@ -259,4 +259,13 @@ defmodule RyuiWeb.Live.Countries do
     end)
     |> Enum.take(10)
   end
+
+  def changeset(params \\ %{}) do
+    data = %{}
+    types = %{countries: {:array, :string}}
+
+    {data, types}
+    |> Ecto.Changeset.cast(params, Map.keys(types))
+    |> Ecto.Changeset.validate_required([:countries])
+  end
 end

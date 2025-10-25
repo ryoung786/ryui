@@ -6,7 +6,11 @@ defmodule RyuiWeb.StorybookLive do
 
   @impl true
   def mount(_, _session, socket) do
-    {:ok, assign(socket, countries: Countries.search(""))}
+    {:ok,
+     assign(socket,
+       countries: Countries.search(""),
+       combobox_form: to_form(Countries.changeset(), as: :countries)
+     )}
   end
 
   @impl true
@@ -15,8 +19,13 @@ defmodule RyuiWeb.StorybookLive do
   end
 
   @impl true
-  def handle_event("change", params, socket) do
-    IO.inspect(params, label: "params")
-    {:noreply, socket}
+  def handle_event("validate", params, socket) do
+    form =
+      (params["countries"] || %{})
+      |> Countries.changeset()
+      |> Map.put(:action, :validate)
+      |> to_form(as: :countries)
+
+    {:noreply, assign(socket, combobox_form: form)}
   end
 end
