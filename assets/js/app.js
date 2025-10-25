@@ -26,17 +26,22 @@ import { hooks as colocatedHooks } from "phoenix-colocated/ryui";
 import topbar from "../vendor/topbar";
 
 ComboboxHook = {
+  updated() {
+    this.index = 0;
+    this.updateHighlight();
+  },
   mounted() {
     this.inputEl = this.el.querySelector('input[type="search"]');
     this.selectEl = this.el.querySelector("select");
     this.listboxEl = this.el.querySelector("ul");
-    this.index = -1;
+    this.index = 0;
+    this.updateHighlight();
 
     window.addEventListener("ryui:combobox:toggle-listbox", (e) => {
       if (!this.el.contains(e.target)) return;
-      if (e.detail == "show") {
+      if (e.detail === "show") {
         this.listboxEl.showPopover();
-      } else if (!this.el.contains(document.activeElement)) {
+      } else if (e.detail === "hide") {
         this.timeout = setTimeout(() => this.listboxEl.hidePopover(), 150);
       }
     });
@@ -60,11 +65,11 @@ ComboboxHook = {
       if (e.key === "ArrowDown") {
         e.preventDefault();
         this.index = (this.index + 1) % items.length;
-        this.updateHighlight(items);
+        this.updateHighlight();
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         this.index = (this.index - 1 + items.length) % items.length;
-        this.updateHighlight(items);
+        this.updateHighlight();
       } else if (e.key === "Enter") {
         e.preventDefault();
         const selected = items[this.index];
@@ -79,7 +84,11 @@ ComboboxHook = {
     });
   },
 
-  updateHighlight(items) {
+  updateHighlight() {
+    const items = Array.from(
+      this.listboxEl.querySelectorAll('[role="option"]'),
+    );
+
     items.forEach((el, i) => {
       el.classList.toggle("highlighted", i === this.index);
       el.setAttribute("aria-selected", i === this.index);
@@ -123,6 +132,7 @@ ComboboxHook = {
     chip.setAttribute("data-value", value);
     parent.appendChild(clone);
 
+    this.selectEl.dispatchEvent(new Event("change", { bubbles: true }));
     this.inputEl.focus();
   },
 

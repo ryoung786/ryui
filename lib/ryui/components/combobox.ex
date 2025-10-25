@@ -3,8 +3,9 @@ defmodule Ryui.Combobox do
 
   @doc """
   """
-  attr :id, :string
+  attr :id, :string, required: true
   attr :listbox_class, :string, default: nil
+  attr :options, :list, default: []
 
   slot :option do
     attr :value, :string, required: true
@@ -12,11 +13,6 @@ defmodule Ryui.Combobox do
   end
 
   def combobox(assigns) do
-    assigns =
-      assign_new(assigns, :id, fn ->
-        Base.url_encode64(:crypto.strong_rand_bytes(8), padding: false)
-      end)
-
     ~H"""
     <div id={@id} phx-hook="ComboboxHook">
       <select id={@id <> "-select"} name="myselect[]" multiple hidden phx-update="ignore"></select>
@@ -59,17 +55,13 @@ defmodule Ryui.Combobox do
         popover="manual"
         style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
       >
-        <li
-          :for={{option, i} <- Enum.with_index(@option)}
-          role="option"
-          aria-selected={i == 0}
-          phx-click={JS.dispatch("ryui:combobox:add-selection", detail: option[:value])}
-          data-value={option[:value]}
-          data-chip-text={option[:chip_text]}
-          class="cursor-pointer rounded [&.highlighted]:bg-base-content/10"
-        >
-          <a>{render_slot(option)}</a>
-        </li>
+        <.option :for={{name, value} <- @options} name={name} value={value}>
+          <%= if @option == [] do %>
+            {name}
+          <% else %>
+            {render_slot(@option, {name, value})}
+          <% end %>
+        </.option>
       </ul>
       <template>
         <span
@@ -79,6 +71,20 @@ defmodule Ryui.Combobox do
         </span>
       </template>
     </div>
+    """
+  end
+
+  def option(assigns) do
+    ~H"""
+    <li
+      role="option"
+      phx-click={JS.dispatch("ryui:combobox:add-selection", detail: @value)}
+      data-value={@value}
+      data-chip-text={@name}
+      class="cursor-pointer rounded [&.highlighted]:bg-base-content/10"
+    >
+      <a>{render_slot(@inner_block)}</a>
+    </li>
     """
   end
 end
