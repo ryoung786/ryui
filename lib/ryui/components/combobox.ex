@@ -85,7 +85,7 @@ defmodule Ryui.Combobox do
       </ul>
       <template>
         <span
-          class="inline-block text-xs bg-red-200 text-black rounded-sm px-1 cursor-pointer"
+          class="inline-block text-xs bg-primary/50 text-base-content rounded-sm px-1 cursor-pointer"
           phx-click={JS.dispatch("ryui:combobox:remove-selection")}
         >
         </span>
