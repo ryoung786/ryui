@@ -12,7 +12,7 @@
       <.section id="combobox" title="Combobox">
         <:example title="Basic" source={~s|<.combobox id="combobox2" options={@countries} />|}>
           <div class="max-w-lg">
-            <.combobox id="combobox1" options={@countries} />
+            <.combobox id="combobox1" options={@countries0} />
           </div>
         </:example>
 
@@ -29,7 +29,7 @@
           }
         >
           <div class="max-w-lg">
-            <.combobox id="combobox2" options={@countries}>
+            <.combobox id="combobox2" options={@countries1} search_event="search1">
               <:option :let={{name, _value}}>
                 <.icon name="hero-flag" class="size-4" />{name}
               </:option>
@@ -60,7 +60,12 @@
         >
           <div class="max-w-lg">
             <.form :let={f} for={@combobox_form} phx-change="validate">
-              <.combobox id="combobox3" options={@countries} field={f[:countries]} />
+              <.combobox
+                id="combobox3"
+                options={@countries2}
+                field={f[:countries]}
+                search_event="search2"
+              />
             </.form>
           </div>
         </:example>

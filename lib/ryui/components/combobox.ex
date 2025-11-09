@@ -10,6 +10,7 @@ defmodule Ryui.Combobox do
   attr :field, :any, default: nil
   attr :errors, :list, default: []
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+  attr :search_event, :string, default: "search"
 
   slot :option do
     attr :value, :string, required: true
@@ -50,7 +51,7 @@ defmodule Ryui.Combobox do
               autocomplete="off"
               placeholder="Search"
               phx-debounce={120}
-              phx-change="search"
+              phx-change={@search_event}
               phx-focus={JS.dispatch("ryui:combobox:toggle-listbox", detail: "show")}
               phx-blur={JS.dispatch("ryui:combobox:toggle-listbox", detail: "hide")}
               role="combobox"

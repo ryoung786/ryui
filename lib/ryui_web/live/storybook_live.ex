@@ -7,16 +7,29 @@ defmodule RyuiWeb.StorybookLive do
 
   @impl true
   def mount(_, _session, socket) do
+    countries = Countries.search("")
+
     {:ok,
-     assign(socket,
-       countries: Countries.search(""),
+     socket
+     |> assign(
+       countries0: countries,
+       countries1: countries,
+       countries2: countries,
        combobox_form: to_form(Countries.changeset(), as: :countries)
      )}
   end
 
   @impl true
   def handle_event("search", %{"search-text" => q}, socket) do
-    {:noreply, assign(socket, countries: Countries.search(q))}
+    {:noreply, assign(socket, countries0: Countries.search(q))}
+  end
+
+  def handle_event("search1", %{"search-text" => q}, socket) do
+    {:noreply, assign(socket, countries1: Countries.search(q))}
+  end
+
+  def handle_event("search2", %{"search-text" => q}, socket) do
+    {:noreply, assign(socket, countries2: Countries.search(q))}
   end
 
   @impl true
