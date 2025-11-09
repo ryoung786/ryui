@@ -3,8 +3,13 @@ defmodule Ryui.Sidebar do
 
   embed_templates "sidebar.html"
 
-  attr :id, :string, default: Base.url_encode64(:crypto.strong_rand_bytes(8), padding: false)
-  slot :sidebar_content, required: true
-  slot :inner_block, required: true
-  def sidebar(assigns)
+  def toggle(js \\ %JS{}) do
+    JS.toggle_attribute(js, {"open", true}, to: "#sidebar")
+  end
+
+  defp item(assigns) do
+    ~H"""
+    <li><a href={@href} phx-click={toggle()}>{render_slot(@inner_block)}</a></li>
+    """
+  end
 end

@@ -3,6 +3,7 @@ defmodule RyuiWeb.StorybookLive do
 
   import Ryui
   alias RyuiWeb.Live.Countries
+  alias Ryui.Sidebar
 
   @impl true
   def mount(_, _session, socket) do

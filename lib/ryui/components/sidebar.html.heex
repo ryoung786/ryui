@@ -1,25 +1,29 @@
-<script :type={Phoenix.LiveView.ColocatedHook} name=".Ryui.Sidebar">
-  export default {
-    mounted() {
-    }
-  }
-</script>
-<div
-  id={@id}
-  class={[
-    "grid h-full w-full",
-    "transition-[grid-template-columns] ease-in-out group duration-300",
-    "data-[sidebar-width=expanded]:grid-cols-[17rem_1fr]",
-    "data-[sidebar-width=collapsed]:grid-cols-[0_1fr]"
-  ]}
-  phx-hook=".Ryui.Sidebar"
-  data-sidebar-width="expanded"
->
-  <aside class="h-full bg-base-200/30 relative border-r border-base-content/30">
-    {render_slot(@sidebar_content)}
+<div id="sidebar" class="flex lg:h-screen lg:overflow-hidden scroll-pt-80">
+  <aside
+    class={[
+      "z-3 overflow-y-auto bg-base-100 border-base-content/30",
+      "-translate-x-full [[open]_&]:translate-x-0",
+      "transition-transform duration-200 ease-in-out",
+      "fixed top-0 left-0 bottom-0 w-[100vw]",
+      "lg:relative lg:opacity-100 lg:translate-x-0 sm:w-64 sm:border-r"
+    ]}
+    phx-click-away={toggle()}
+  >
+    <div class="hidden lg:flex flex-row justify-between p-4 gap-10">
+      <a href="/" class="btn">RYUI</a>
+      <RyuiWeb.Layouts.theme_toggle />
+    </div>
+    <div class="lg:hidden flex justify-end p-4 pb-0">
+      <button class="lg:hidden btn btn-sm btn-circle" phx-click={toggle()}>✕</button>
+    </div>
+    <ul class="menu w-full p-4">
+      <.item href="#combobox">Combobox</.item>
+      <.item href="#tooltip">Tooltip</.item>
+      <.item href="#details">Details</.item>
+      <.item href="#modal">Modal</.item>
+    </ul>
   </aside>
-
-  <main class="p-4 overflow-auto">
+  <main class="flex-1 py-4 px-16 w-full overflow-auto">
     {render_slot(@inner_block)}
   </main>
 </div>

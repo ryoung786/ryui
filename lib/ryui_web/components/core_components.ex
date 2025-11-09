@@ -473,7 +473,9 @@ defmodule RyuiWeb.CoreComponents do
   def section(assigns) do
     ~H"""
     <div>
-      <h1 id={@id} class="text-2xl font-semibold underline mb-8">{@title}</h1>
+      <h1 id={@id} class="text-2xl font-semibold underline mb-8">
+        {@title}
+      </h1>
       <%= for {example, i} <- Enum.with_index(@example) do %>
         <h2 :if={example[:title]} class="text-lg font-semibold mb-2">{example[:title]}</h2>
         <p :if={example[:description]} class="text-sm italic">{example[:description]}</p>
