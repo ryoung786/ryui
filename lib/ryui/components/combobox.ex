@@ -9,7 +9,6 @@ defmodule Ryui.Combobox do
   attr :options, :list, default: []
   attr :field, :any, default: nil
   attr :errors, :list, default: []
-  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :search_event, :string, default: "search"
 
   slot :option do
@@ -34,6 +33,15 @@ defmodule Ryui.Combobox do
       phx-hook="ComboboxHook"
       phx-click-away={JS.dispatch("ryui:combobox:hide-listbox")}
     >
+      <style>
+        @scope {
+          @position-try --ryui-above {
+            inset: unset;
+            bottom: anchor(top);
+            left: anchor(left);
+          }
+        }
+      </style>
       <select id={@id <> "-select"} name={@name} multiple hidden phx-update="ignore"></select>
 
       <form class="inline-block w-full">
@@ -67,16 +75,18 @@ defmodule Ryui.Combobox do
         <p :for={msg <- @errors} class="mt-1.5 flex gap-2 items-center text-sm text-error">
           <.icon name="hero-exclamation-circle" class="size-5" />{msg}
         </p>
-
         <ul
           id={@id <> "-listbox"}
           role="listbox"
           class={[
             "absolute rounded-box bg-base-100 shadow-sm border border-base-content/10 hidden open:block z-99",
-            @listbox_class || "menu w-52"
+            @listbox_class || "menu w-52",
+            "transition transition-discrete origin-top",
+            "opacity-0 scale-95 starting:open:opacity-0 starting:open:scale-95",
+            "open:opacity-100 open:scale-100"
           ]}
           popover="manual"
-          style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
+          style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left); position-try-fallbacks: --ryui-above;"}
         >
           <.option :for={{name, value} <- @options} name={name} value={value}>
             <%= if @option == [] do %>

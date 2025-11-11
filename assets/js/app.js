@@ -29,7 +29,6 @@ ComboboxHook = {
   updated() {
     this.index = 0;
     this.updateHighlight();
-    this.listboxEl.showPopover();
   },
   mounted() {
     this.inputEl = this.el.querySelector('input[type="search"]');
@@ -90,6 +89,10 @@ ComboboxHook = {
         }
       } else if (e.key === "Escape") {
         if (this.inputEl.value === "") this.listboxEl.hidePopover();
+      } else {
+        if (!this.listboxEl.matches(":popover-open")) {
+          this.listboxEl.showPopover();
+        }
       }
     });
   },
