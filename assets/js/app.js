@@ -29,6 +29,7 @@ ComboboxHook = {
   updated() {
     this.index = 0;
     this.updateHighlight();
+    this.listboxEl.showPopover();
   },
   mounted() {
     this.inputEl = this.el.querySelector('input[type="search"]');
@@ -70,20 +71,25 @@ ComboboxHook = {
         e.preventDefault();
         this.index = (this.index + 1) % items.length;
         this.updateHighlight();
+        this.listboxEl.showPopover();
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         this.index = (this.index - 1 + items.length) % items.length;
         this.updateHighlight();
       } else if (e.key === "Enter") {
         e.preventDefault();
-        const selected = items[this.index];
-        if (selected) this.select(selected);
+        if (this.listboxEl.matches(":popover-open")) {
+          const selected = items[this.index];
+          if (selected) this.select(selected);
+        }
       } else if (e.key === "Backspace") {
         if (this.inputEl.value === "") {
           e.preventDefault();
           const chip = this.el.querySelector(".selected-chips > :last-child");
           if (chip) this.deselect(chip);
         }
+      } else if (e.key === "Escape") {
+        this.listboxEl.hidePopover();
       }
     });
   },
