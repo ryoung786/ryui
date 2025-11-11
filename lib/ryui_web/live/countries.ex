@@ -254,8 +254,8 @@ defmodule RyuiWeb.Live.Countries do
     q = q |> String.downcase() |> String.trim()
 
     @countries
-    |> Enum.filter(fn {name, code} ->
-      String.contains?(String.downcase(name), q) || String.contains?(String.downcase(code), q)
+    |> Enum.filter(fn {name, _code} ->
+      String.contains?(String.downcase(name), q)
     end)
     |> Enum.take(10)
   end

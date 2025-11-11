@@ -34,20 +34,20 @@ defmodule Ryui.Combobox do
 
       <form class="inline-block w-full">
         <label
-          class={["input w-full", @errors != [] && "input-error"]}
+          class={["input w-full h-auto p-2", @errors != [] && "input-error"]}
           style={"anchor-name:--#{@id}-anchor"}
         >
-          <div class="flex w-full items-center">
+          <div class="flex flex-wrap flex-1 gap-1 w-full items-center">
             <div
               id={@id <> "-selected-chips"}
-              class="selected-chips inline-block has-[span]:mr-2"
+              class="selected-chips contents"
               phx-update="ignore"
             >
             </div>
             <input
               type="search"
               name="search-text"
-              class="grow"
+              class="grow w-20"
               autocomplete="off"
               placeholder="Search"
               phx-debounce={120}
@@ -60,30 +60,34 @@ defmodule Ryui.Combobox do
               aria-autocomplete="list"
             />
           </div>
-          <.icon name="hero-magnifying-glass" class="w-4 h-4" />
+          <.icon name="hero-magnifying-glass" class="w-4 h-4 shrink-0" />
         </label>
         <p :for={msg <- @errors} class="mt-1.5 flex gap-2 items-center text-sm text-error">
           <.icon name="hero-exclamation-circle" class="size-5" />{msg}
         </p>
+
+        <ul
+          id={@id <> "-listbox"}
+          role="listbox"
+          class={[
+            "absolute rounded-box bg-base-100 shadow-sm border border-base-content/10 hidden open:block z-99",
+            @listbox_class || "menu w-52"
+          ]}
+          popover="manual"
+          style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
+        >
+          <.option :for={{name, value} <- @options} name={name} value={value}>
+            <%= if @option == [] do %>
+              {name}
+            <% else %>
+              {render_slot(@option, {name, value})}
+            <% end %>
+          </.option>
+          <li :if={Enum.count(@options) == 0} class="italic text-base-content/60 text-center">
+            No results
+          </li>
+        </ul>
       </form>
-      <ul
-        id={@id <> "-listbox"}
-        role="listbox"
-        class={[
-          "absolute rounded-box bg-base-100 shadow-sm border border-base-content/10 hidden open:block z-99",
-          @listbox_class || "menu w-52"
-        ]}
-        popover="manual"
-        style={"position-anchor:--#{@id}-anchor; top: anchor(bottom); left: anchor(left);"}
-      >
-        <.option :for={{name, value} <- @options} name={name} value={value}>
-          <%= if @option == [] do %>
-            {name}
-          <% else %>
-            {render_slot(@option, {name, value})}
-          <% end %>
-        </.option>
-      </ul>
       <template>
         <span
           class="inline-block text-xs bg-primary/50 text-base-content rounded-sm px-1 cursor-pointer"
