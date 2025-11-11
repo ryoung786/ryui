@@ -473,9 +473,14 @@ defmodule RyuiWeb.CoreComponents do
   def section(assigns) do
     ~H"""
     <div>
-      <h1 id={@id} class="text-2xl font-semibold underline mb-8">
-        {@title}
-      </h1>
+      <div class="mb-8">
+        <h1 id={@id} class="text-2xl font-semibold underline">
+          {@title}
+        </h1>
+        <div :if={@inner_block} class="mt-2 text-base-content/80 text-sm italic">
+          {render_slot(@inner_block)}
+        </div>
+      </div>
       <%= for {example, i} <- Enum.with_index(@example) do %>
         <h2 :if={example[:title]} class="text-lg font-semibold mb-2">{example[:title]}</h2>
         <p :if={example[:description]} class="text-sm italic">{example[:description]}</p>
@@ -490,7 +495,7 @@ defmodule RyuiWeb.CoreComponents do
 
           <label class="tab">
             <input type="radio" name={"#{@id}_#{i}"} />
-            <.icon name="hero-code-bracket" /> Source
+            <.icon name="hero-code-bracket" /><span class="ml-1">Usage</span>
           </label>
           <div class="tab-content bg-base-100 border-base-300 p-1 text-sm">
             <pre class="p-4 rounded text-lime-600 bg-black overflow-x-auto">{example[:source]}</pre>
