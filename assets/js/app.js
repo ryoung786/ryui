@@ -89,7 +89,7 @@ ComboboxHook = {
           if (chip) this.deselect(chip);
         }
       } else if (e.key === "Escape") {
-        this.listboxEl.hidePopover();
+        if (this.inputEl.value === "") this.listboxEl.hidePopover();
       }
     });
   },
