@@ -37,21 +37,25 @@ ComboboxHook = {
     this.index = 0;
     this.updateHighlight();
 
-    window.addEventListener("ryui:combobox:toggle-listbox", (e) => {
-      if (!this.el.contains(e.target)) return;
-      if (e.detail === "show") {
+    document.addEventListener("focusin", (e) => {
+      if (this.el.contains(e.target)) {
         this.listboxEl.showPopover();
-      } else if (e.detail === "hide") {
-        this.timeout = setTimeout(() => this.listboxEl.hidePopover(), 150);
+      } else {
+        this.listboxEl.hidePopover();
       }
     });
 
-    window.addEventListener("ryui:combobox:add-selection", (e) => {
+    this.el.addEventListener("ryui:combobox:hide-listbox", (e) => {
+      if (!this.el.contains(e.target)) return;
+      this.listboxEl.hidePopover();
+    });
+
+    this.el.addEventListener("ryui:combobox:add-selection", (e) => {
       if (!this.el.contains(e.target)) return;
       this.select(e.target);
     });
 
-    window.addEventListener("ryui:combobox:remove-selection", (e) => {
+    this.el.addEventListener("ryui:combobox:remove-selection", (e) => {
       if (!this.el.contains(e.target)) return;
       this.deselect(e.target);
     });
@@ -97,7 +101,6 @@ ComboboxHook = {
     const active = items[this.index];
     if (active) {
       this.inputEl.setAttribute("aria-activedescendant", active.id);
-      active.scrollIntoView({ block: "nearest" });
     } else {
       this.inputEl.removeAttribute("aria-activedescendant");
     }
@@ -108,8 +111,6 @@ ComboboxHook = {
   },
 
   select(item) {
-    clearTimeout(this.timeout); // keeps the dropdown open and visible
-
     const value = item.dataset.value;
     const chip_text = item.dataset.chipText;
 
@@ -137,7 +138,6 @@ ComboboxHook = {
   },
 
   deselect(chip) {
-    clearTimeout(this.timeout); // keeps the dropdown open and visible
     const value = chip.dataset.value;
     chip.remove();
     const option = this.selectEl.querySelector(`option[data-value="${value}"]`);

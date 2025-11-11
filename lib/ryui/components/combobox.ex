@@ -29,7 +29,11 @@ defmodule Ryui.Combobox do
     assigns = assign_new(assigns, :name, fn -> "combobox-select" end)
 
     ~H"""
-    <div id={@id} phx-hook="ComboboxHook">
+    <div
+      id={@id}
+      phx-hook="ComboboxHook"
+      phx-click-away={JS.dispatch("ryui:combobox:hide-listbox")}
+    >
       <select id={@id <> "-select"} name={@name} multiple hidden phx-update="ignore"></select>
 
       <form class="inline-block w-full">
@@ -52,8 +56,6 @@ defmodule Ryui.Combobox do
               placeholder="Search"
               phx-debounce={120}
               phx-change={@search_event}
-              phx-focus={JS.dispatch("ryui:combobox:toggle-listbox", detail: "show")}
-              phx-blur={JS.dispatch("ryui:combobox:toggle-listbox", detail: "hide")}
               role="combobox"
               aria-controls={@id <> "-listbox"}
               aria-expanded="false"
@@ -103,7 +105,7 @@ defmodule Ryui.Combobox do
     ~H"""
     <li
       role="option"
-      phx-click={JS.dispatch("ryui:combobox:add-selection", detail: @value)}
+      phx-click={JS.dispatch("ryui:combobox:add-selection")}
       data-value={@value}
       data-chip-text={@name}
       class="cursor-pointer rounded [&.highlighted]:bg-base-content/10"
