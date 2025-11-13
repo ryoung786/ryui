@@ -1,0 +1,40 @@
+<header class="lg:hidden sticky top-0 z-2 h-16 flex flex-row justify-between p-4 gap-10 bg-base-100">
+  <div>
+    <button class="btn" phx-click={toggle_sidebar()}><.icon name="hero-bars-3" /></button>
+    <a href="/" class="btn">RYUI</a>
+  </div>
+  <theme_toggle />
+</header>
+
+<div class="lg:max-w-[96rem] mx-auto flex max-w-4xl items-start relative">
+  <nav
+    id="sidebar"
+    class={[
+      "lg:sticky lg:top-0 lg:block",
+      "lg:relative lg:opacity-100 lg:translate-x-0 sm:w-64 sm:border-r",
+      "z-3 bg-base-100 border-base-content/30 h-screen overflow-y-auto",
+      "-translate-x-full open:translate-x-0",
+      "transition-transform duration-200 ease-in-out",
+      "fixed top-0 left-0 bottom-0 w-[100vw]"
+    ]}
+  >
+    <div class="hidden lg:flex flex-row justify-between p-4 gap-10">
+      <a href="/" class="btn">RYUI</a>
+      <.theme_toggle />
+    </div>
+    <div class="lg:hidden flex justify-end p-4 pb-0">
+      <button class="lg:hidden btn btn-sm btn-circle" phx-click={toggle_sidebar()}>✕</button>
+    </div>
+    <ul class="menu w-full p-4">
+      <.sidebar_item href="#combobox">Combobox</.sidebar_item>
+      <.sidebar_item href="#tooltip">Tooltip</.sidebar_item>
+      <.sidebar_item href="#details">Details</.sidebar_item>
+      <.sidebar_item href="#modal">Modal</.sidebar_item>
+    </ul>
+  </nav>
+  <main class="flex-1 py-4 px-6 lg:px-16 min-w-0 max-w-none">
+    {render_slot(@inner_block)}
+  </main>
+</div>
+
+<.flash_group flash={@flash} />

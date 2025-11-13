@@ -33,12 +33,7 @@ defmodule RyuiWeb.Layouts do
 
   slot :inner_block, required: true
 
-  def app(assigns) do
-    ~H"""
-    <div class="mx-auto lg:max-w-[96rem]">{render_slot(@inner_block)}</div>
-    <.flash_group flash={@flash} />
-    """
-  end
+  def app(assigns)
 
   @doc """
   Shows the flash group with standard titles and content.
@@ -117,6 +112,16 @@ defmodule RyuiWeb.Layouts do
         <.icon name="hero-moon-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
     </div>
+    """
+  end
+
+  def toggle_sidebar(js \\ %JS{}) do
+    JS.toggle_attribute(js, {"open", true}, to: "#sidebar")
+  end
+
+  def sidebar_item(assigns) do
+    ~H"""
+    <li><a href={@href} phx-click={toggle_sidebar()}>{render_slot(@inner_block)}</a></li>
     """
   end
 end

@@ -1,117 +1,97 @@
 <Layouts.app flash={@flash}>
-  <header class="lg:hidden sticky top-0 z-2 flex flex-row justify-between p-4 gap-10 bg-base-100">
-    <div>
-      <button class="btn" phx-click={Sidebar.toggle()}><.icon name="hero-bars-3" /></button>
-      <a href="/" class="btn">RYUI</a>
-    </div>
-    <RyuiWeb.Layouts.theme_toggle />
-  </header>
+  <div class="flex flex-col gap-16">
+    <.section id="combobox" title="Combobox">
+      <p>A multiple select component that allows for searching.</p>
+      <a
+        class="link link-primary not-italic"
+        href="https://github.com/ryoung786/ryui/blob/main/lib/ryui/components/combobox.ex"
+        class="tab"
+      >
+        Source
+      </a>
+      <:example title="Basic" source={~s|<.combobox id="combobox2" options={@countries} />|}>
+        <div class="max-w-lg">
+          <.combobox id="combobox1" options={@countries0} />
+        </div>
+      </:example>
 
-  <.sidebar>
-    <div class="flex flex-col gap-16">
-      <.section id="combobox" title="Combobox">
-        <p>A multiple select component that allows for searching.</p>
-        <a
-          class="link link-primary not-italic"
-          href="https://github.com/ryoung786/ryui/blob/main/lib/ryui/components/combobox.ex"
-          class="tab"
-        >
-          Source
-        </a>
-        <:example title="Basic" source={~s|<.combobox id="combobox2" options={@countries} />|}>
-          <div class="max-w-lg">
-            <.combobox id="combobox1" options={@countries0} />
-          </div>
-        </:example>
+      <:example
+        title="Options as slots"
+        source={
+          ~s"""
+          <.combobox id="combobox2" options={@countries}>
+            <:option :let={{name, _value}}>
+              <.icon name="hero-flag" class="size-4" />{name}
+            </:option>
+          </.combobox>
+          """
+        }
+      >
+        <div class="max-w-lg">
+          <.combobox id="combobox2" options={@countries1} search_event="search1">
+            <:option :let={{name, _value}}>
+              <.icon name="hero-flag" class="size-4" />{name}
+            </:option>
+          </.combobox>
+        </div>
+      </:example>
 
-        <:example
-          title="Options as slots"
-          source={
-            ~s"""
-            <.combobox id="combobox2" options={@countries}>
-              <:option :let={{name, _value}}>
-                <.icon name="hero-flag" class="size-4" />{name}
-              </:option>
-            </.combobox>
-            """
-          }
-        >
-          <div class="max-w-lg">
-            <.combobox id="combobox2" options={@countries1} search_event="search1">
-              <:option :let={{name, _value}}>
-                <.icon name="hero-flag" class="size-4" />{name}
-              </:option>
-            </.combobox>
-          </div>
-        </:example>
+      <:example
+        title="With Forms"
+        source={
+          ~s"""
+          <.form :let={f} for={@form} phx-change="validate">
+            <.combobox id="combobox3" options={@countries} field={f[:countries]} />
+          </.form>
 
-        <:example
-          title="With Forms"
-          source={
-            ~s"""
-            <.form :let={f} for={@form} phx-change="validate">
-              <.combobox id="combobox3" options={@countries} field={f[:countries]} />
-            </.form>
+          # in liveview
+          def handle_event("validate", params, socket) do
+            form =
+              (params["countries"] || %{})
+              |> Countries.changeset()
+              |> Map.put(:action, :validate)
+              |> to_form(as: :countries)
 
-            # in liveview
-            def handle_event("validate", params, socket) do
-              form =
-                (params["countries"] || %{})
-                |> Countries.changeset()
-                |> Map.put(:action, :validate)
-                |> to_form(as: :countries)
+            {:noreply, assign(socket, combobox_form: form)}
+          end
+          """
+        }
+      >
+        <div class="max-w-lg">
+          <.form :let={f} for={@combobox_form} phx-change="validate">
+            <.combobox
+              id="combobox3"
+              options={@countries2}
+              field={f[:countries]}
+              search_event="search2"
+            />
+          </.form>
+        </div>
+      </:example>
+    </.section>
 
-              {:noreply, assign(socket, combobox_form: form)}
-            end
-            """
-          }
-        >
-          <div class="max-w-lg">
-            <.form :let={f} for={@combobox_form} phx-change="validate">
-              <.combobox
-                id="combobox3"
-                options={@countries2}
-                field={f[:countries]}
-                search_event="search2"
-              />
-            </.form>
-          </div>
-        </:example>
-      </.section>
-
-      <.section id="tooltip" title="Tooltip">
-        <:example
-          title="All directions"
-          source={
-            ~s"""
-            <.tooltip tip="Hello World">Top</.tooltip>
-            <.tooltip position="right" tip="Hello World">Right</.tooltip>
-            <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
-            <.tooltip position="left" tip="Hello World">Left</.tooltip>
-            """
-          }
-        >
+    <.section id="tooltip" title="Tooltip">
+      <:example
+        title="All directions"
+        source={
+          ~s"""
           <.tooltip tip="Hello World">Top</.tooltip>
           <.tooltip position="right" tip="Hello World">Right</.tooltip>
           <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
           <.tooltip position="left" tip="Hello World">Left</.tooltip>
-        </:example>
+          """
+        }
+      >
+        <.tooltip tip="Hello World">Top</.tooltip>
+        <.tooltip position="right" tip="Hello World">Right</.tooltip>
+        <.tooltip position="bottom" tip="Hello World">Bottom</.tooltip>
+        <.tooltip position="left" tip="Hello World">Left</.tooltip>
+      </:example>
 
-        <:example
-          title="With html content"
-          source={
-            ~s"""
-            <.tooltip>
-              <:tooltip_content>
-                <div class="flex items-center">
-                  <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
-                </div>
-              </:tooltip_content>
-              Hover
-            </.tooltip>
-            """
-          }
-        >
+      <:example
+        title="With html content"
+        source={
+          ~s"""
           <.tooltip>
             <:tooltip_content>
               <div class="flex items-center">
@@ -120,41 +100,51 @@
             </:tooltip_content>
             Hover
           </.tooltip>
-        </:example>
-      </.section>
-
-      <.section id="details" title="Details">
-        <:example source={
-          ~s"""
-          <.details>
-            <:summary><h1 class="font-semibold">Click to open</h1></:summary>
-            <p class="text-sm">All the details here</p>
-          </.details>
           """
-        }>
-          <.details>
-            <:summary>
-              <h1 class="font-semibold">Click to open</h1>
-            </:summary>
-            <p class="text-sm">All the details here</p>
-          </.details>
-        </:example>
-      </.section>
+        }
+      >
+        <.tooltip>
+          <:tooltip_content>
+            <div class="flex items-center">
+              <.icon name="hero-check-circle" /><span class="bg-red-400">Wow</span>
+            </div>
+          </:tooltip_content>
+          Hover
+        </.tooltip>
+      </:example>
+    </.section>
 
-      <.section id="modal" title="Modal">
-        <:example
-          title="All directions"
-          source={
-            ~s"""
-            <button onclick="my_modal.showModal()">open modal</button>
-            <.modal id="my_modal">Here is some content</.modal>
-            """
-          }
-        >
-          <button onclick="my_modal.showModal()" class="btn btn-primary">open modal</button>
+    <.section id="details" title="Details">
+      <:example source={
+        ~s"""
+        <.details>
+          <:summary><h1 class="font-semibold">Click to open</h1></:summary>
+          <p class="text-sm">All the details here</p>
+        </.details>
+        """
+      }>
+        <.details>
+          <:summary>
+            <h1 class="font-semibold">Click to open</h1>
+          </:summary>
+          <p class="text-sm">All the details here</p>
+        </.details>
+      </:example>
+    </.section>
+
+    <.section id="modal" title="Modal">
+      <:example
+        title="All directions"
+        source={
+          ~s"""
+          <button onclick="my_modal.showModal()">open modal</button>
           <.modal id="my_modal">Here is some content</.modal>
-        </:example>
-      </.section>
-    </div>
-  </.sidebar>
+          """
+        }
+      >
+        <button onclick="my_modal.showModal()" class="btn btn-primary">open modal</button>
+        <.modal id="my_modal">Here is some content</.modal>
+      </:example>
+    </.section>
+  </div>
 </Layouts.app>
