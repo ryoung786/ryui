@@ -41,4 +41,13 @@ defmodule RyuiWeb.StorybookLive do
 
     {:noreply, assign(socket, combobox_form: form)}
   end
+
+  defp source(assigns) do
+    ~H|<a
+  class="link link-primary not-italic"
+  href={"https://github.com/ryoung786/ryui/blob/main/lib/ryui/components/#{@href}"}
+>
+  Source
+</a>|
+  end
 end

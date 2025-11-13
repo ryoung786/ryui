@@ -2,13 +2,7 @@
   <div class="flex flex-col gap-16">
     <.section id="combobox" title="Combobox">
       <p>A multiple select component that allows for searching.</p>
-      <a
-        class="link link-primary not-italic"
-        href="https://github.com/ryoung786/ryui/blob/main/lib/ryui/components/combobox.ex"
-        class="tab"
-      >
-        Source
-      </a>
+      <.source href="combobox.ex" />
       <:example title="Basic" source={~s|<.combobox id="combobox2" options={@countries} />|}>
         <div class="max-w-lg">
           <.combobox id="combobox1" options={@countries0} />
@@ -71,6 +65,8 @@
     </.section>
 
     <.section id="tooltip" title="Tooltip">
+      <p>Uses anchor positioning to avoid clipping by parent containers.</p>
+      <.source href="tooltip.ex" />
       <:example
         title="All directions"
         source={
@@ -115,6 +111,8 @@
     </.section>
 
     <.section id="details" title="Details">
+      <p>Expand and collapse with a smooth animation.</p>
+      <.source href="details.ex" />
       <:example source={
         ~s"""
         <.details>
@@ -133,17 +131,26 @@
     </.section>
 
     <.section id="modal" title="Modal">
+      <p>Dialog element with javascript show/hide.</p>
+      <.source href="modal.ex" />
       <:example
         title="All directions"
         source={
           ~s"""
-          <button onclick="my_modal.showModal()">open modal</button>
+          <button onclick="my_modal.showModal()">open modal #1</button>
           <.modal id="my_modal">Here is some content</.modal>
+
+          <button phx-click={Ryui.Modal.open_modal("#modal2")}>open modal #2</button>
+          <.modal id="modal2">Content for modal #2</.modal>
           """
         }
       >
-        <button onclick="my_modal.showModal()" class="btn btn-primary">open modal</button>
+        <button onclick="my_modal.showModal()" class="btn btn-primary mr-4">open modal #1</button>
+        <button phx-click={Ryui.Modal.open_modal("#modal2")} class="btn btn-primary">
+          open modal #2
+        </button>
         <.modal id="my_modal">Here is some content</.modal>
+        <.modal id="modal2">Content for modal #2</.modal>
       </:example>
     </.section>
   </div>

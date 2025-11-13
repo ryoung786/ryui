@@ -1,8 +1,17 @@
 defmodule Ryui.Combobox do
+  @moduledoc """
+  Combobox is a wrapper around a multiple select element.
+
+  Features include:
+  - Search events for realtime searching and filtering
+  - Change events when selections are added and removed
+  - Display of selections inline as clickable chips
+  - Flexible ways to pass in and render dropdown options
+
+  Requires colocated hooks.
+  """
   use RyuiWeb, :html
 
-  @doc """
-  """
   attr :id, :string, default: nil
   attr :name, :string
   attr :listbox_class, :string, default: nil

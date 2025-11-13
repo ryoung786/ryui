@@ -1,21 +1,20 @@
 defmodule Ryui.Modal do
-  use RyuiWeb, :html
-
-  @doc """
+  @moduledoc """
   Modal with a close button in the top right.
 
   Use something like `<button onclick="my_modal.showModal()">open modal</button>` to show the modal.
 
   Note that id must not contain hyphens, it must be a valid javascript variable name.
   """
+  use RyuiWeb, :html
+
   def modal(assigns) do
     ~H"""
     <script :type={Phoenix.LiveView.ColocatedHook} name=".Ryui.Modal">
       export default {
         mounted() {
-          window.addEventListener("ryui:close-modal", (e) => {
-            this.el.close()
-          });
+          this.el.addEventListener("ryui:open-modal", (e) => this.el.showModal());
+          this.el.addEventListener("ryui:close-modal", (e) => this.el.close());
         }
       }
     </script>
@@ -41,5 +40,6 @@ defmodule Ryui.Modal do
     """
   end
 
+  def open_modal(js \\ %JS{}, target), do: JS.dispatch(js, "ryui:open-modal", to: target)
   def close_modal(js \\ %JS{}), do: JS.dispatch(js, "ryui:close-modal")
 end

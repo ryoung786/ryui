@@ -1,14 +1,8 @@
 defmodule Ryui.Details do
-  use RyuiWeb, :html
-
-  @doc """
-  On hover, a tooltip slides out containing either text or full html content.
-
-  Ex:
-      <.tooltip position="right" tip="World">
-        <button>Hello</button>
-      </.tooltip>
+  @moduledoc """
+  Expand and collapse with a smooth animation
   """
+  use RyuiWeb, :html
 
   attr :open, :boolean, default: false
 
